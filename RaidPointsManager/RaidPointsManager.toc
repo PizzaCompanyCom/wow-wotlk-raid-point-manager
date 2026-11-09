@@ -1,0 +1,7 @@
+## Interface: 30300
+## Title: Raid Points Manager
+## Notes: Shared raid rounds, sorting, custom point adjustments, group display, /raid /y /s announcements resets and minimap launcher
+## Author: ChatGPT
+## Version: 1.17
+## SavedVariables: RaidPointsManagerDB
+RaidPointsManager.lua
