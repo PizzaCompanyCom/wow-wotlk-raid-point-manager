@@ -371,7 +371,17 @@ local function build()
             b:SetWidth(41); b:SetHeight(22)
             b:SetPoint("LEFT", 283+j*43, 0)
             b:SetText(j == 0 and "0" or "+"..j)
-            b:SetScript("OnClick", function()
+            -- Use a dedicated selection indicator rather than LockHighlight:
+            -- UIPanelButtonTemplate's hover highlight can remain visible after
+            -- UnlockHighlight on the 3.3.5a client.
+            local indicator = b:CreateTexture(nil, "OVERLAY")
+            indicator:SetTexture("Interface\\Buttons\\WHITE8X8")
+            indicator:SetVertexColor(1, 0.76, 0.12, 0.34)
+            indicator:SetPoint("TOPLEFT", b, "TOPLEFT", 5, -4)
+            indicator:SetPoint("BOTTOMRIGHT", b, "BOTTOMRIGHT", -5, 4)
+            indicator:Hide()
+            b.selectionIndicator = indicator
+            b:SetScript("OnClick", function(self)
                 if row.playerName then
                     -- Clicking the already selected score cancels the pending
                     -- award for this player; no score is committed until Next Round.
@@ -382,6 +392,11 @@ local function build()
                     end
                     row.amount:SetText(""); row.amount:ClearFocus()
                     refresh()
+                    -- Remove any lingering mouse-hover glow after cancellation.
+                    if db.current[row.playerName] == nil then
+                        self:UnlockHighlight()
+                        self:SetButtonState("NORMAL")
+                    end
                 end
             end)
             row.buttons[j+1] = b
@@ -518,7 +533,12 @@ local function build()
                 row.current:SetText(tostring(db.roundCounts[name] or 0))
                 row.total:SetText(tostring(db.points[name] or 0))
                 for j,b in ipairs(row.buttons) do
-                    if score == j-1 then b:LockHighlight() else b:UnlockHighlight() end
+                    b:UnlockHighlight()
+                    if score == j-1 then
+                        b.selectionIndicator:Show()
+                    else
+                        b.selectionIndicator:Hide()
+                    end
                 end
                 if not inSettings then row:Show() end
             else row:Hide() end
