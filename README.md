@@ -1,5 +1,5 @@
 # wow-wotlk-raid-point-manager
-Raid Points Manager v1.17
+Raid Points Manager v1.19
 World of Warcraft 3.3.5a — TrinityCore
 
 <img width="200px" src="Screenshots/Wow 2026-11-10 13-29-37-335.jpg" alt="описание"/>
